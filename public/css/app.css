@@ -1,0 +1,54 @@
+@import url(https://fonts.googleapis.com/css?family=Nunito);.text-blue {
+  clor: #3490dc;
+}
+
+.text-indigo {
+  clor: #6574cd;
+}
+
+.text-purple {
+  clor: #9561e2;
+}
+
+.text-pink {
+  clor: #f66d9b;
+}
+
+.text-red {
+  clor: #e3342f;
+}
+
+.text-orange {
+  clor: #f6993f;
+}
+
+.text-yellow {
+  clor: #ffed4a;
+}
+
+.text-green {
+  clor: #38c172;
+}
+
+.text-teal {
+  clor: #4dc0b5;
+}
+
+.text-cyan {
+  clor: #6cb2eb;
+}
+
+.router-link-exact-active {
+  color: #fff;
+  background: #1e282c;
+  color: #fff !important;
+}
+
+.remove-padding-left {
+  padding-left: 0px;
+}
+
+.add-padding-left {
+  padding-left: 5px;
+}
+

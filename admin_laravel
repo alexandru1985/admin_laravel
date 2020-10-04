@@ -1,0 +1,558 @@
+Lectiile 1-5
+npm install va instala node_modules in directorul root
+npm run watch va compila fisierele in resource/js/app.js 
+se adauga in interiorul tag-ului <head> <link rel="stylesheet" href="/css/app.css">
+se adauga la sfarsitul tag-ului body <script type="text/javascript" src="/js/app.js"></script>
+
+Lectia 6 Configure Vue Router to Laravel
+npm install vue-router
+<router-view></router-view> componentele vue vor fi afisate in interiorul acestui tag atunci cand se va face click pe un link
+dupa ce se inporta VueRouter in app.js se va adauga mai jos un array cu routes
+
+import Dashboard from './components/Dashboard.vue';
+import Profile from './components/Profile.vue';
+
+let routes = [
+  { path: '/dashboard', component: Dashboard},
+  { path: '/profile', component: Profile }
+]
+
+apoi se inregistreaza routes
+
+const router = new VueRouter({
+ routes,
+ mode: 'history'
+})
+
+
+apoi const router se inregistreaza in
+
+const app = new Vue({
+    el: '#app',
+    router
+});
+id-ul app se adauga chiar la primul div din interiorul <body> ca link-urile sa fie functionale
+
+Lectia 7 Detect Active Menu in Vue Router and Laravel Plus HTML5 History Mode
+
+se adauga mode: 'history' pentru a se realiza o ruta simpla fara denumire de controler de forma 27.0.0.1:8000/dashboard
+const router = new VueRouter({
+ routes,
+ mode: 'history'
+})
+
+se adauga in routes/web
+
+
+Route::get('{path}', 'HomeController@index')->where('path', '([A-z\d-\/_.]+)?');
+
+pentru a recunoaste ruta 27.0.0.1:8000/dashboard la refresh browser
+
+Vue Router adauga la click clasa .router-link-exact-active, iar apoi in acesta clasa se definesc proprietati
+
+Lectia 8 Custom Color for Font Awesome Icons and How Logout Works in Laravel
+
+pentru logout se copiaza codul de la resources/views/layouts/app.blade.php
+
+Lectia 9 Create User Managment Component in Vue and Laravel
+Lectia 10 Display Users in Table and Modal Window for Creating new User in Laravel and Vue
+Lectia 11 Using VFrom for Back-end Error Handling in Laravel and Vuejs
+
+se adauga importa VForm in app.js
+se defineste Form prin adaugarea liniei de cod window.Form = Form;
+se adauga data() function in User component la export default
+textul de la name va fi adaugat in obiectul Form prin v-model="form.name", conceptul de binding; acest lucru se poate vedea in Vue debbuger
+
+Lectia 12 API Resource Controller in Laravel 5.7 with Vuejs
+
+se adauga <form @submit.prevent="createUser">, apoi se defineste functia createUser() in User component la methods
+se adauga this.form.post('api/user'); la createUser(); poate adauga un nou user doar un user logat
+
+php artisan make:controller API/UserController --api
+
+se adauga in routes/api
+
+Route::apiResources([
+    'user' => 'API\UserController',
+]);
+
+se verifica rutele folosind comanda php artisan route:list
+
+Lectia 13 Insert User Data to Database Using Axios in Laravel 5.7 and Vue
+
+se adauga noile campuri din tabela users; pentru acest lucru este necesara o noua migratie
+
+php artisan make:migration add_new_fields_to_users
+
+apoi se executa comanda 
+
+php artisan migrate
+
+pentru a se anula ultima comanda se executa comanda
+
+php artisan migrate:rollback
+
+pentru a se sterge noile campuri acestea trebuie adaugate in metoda down() a migratiei
+
+se verifica la Network in consola daca cererea ajax post din createUser() returneaza date
+
+Lectia 14 Nice Server Validation with Laravel and Vue js (handle with vForm)
+
+se adauga in UserController la metoda store
+
+$this->validate($request, [
+       'name' =>'required'
+        ...      
+]);
+
+se adauga :class="{ 'has-error': form.errors.has('name') }" pentru div-ul care contine inputul name; 
+se observa conceptul de binding pentru VForm
+
+Status Code: 201 Created
+
+Lectia 15
+
+Display Users from Database in Table Using Axios in Laravel and Vue
+
+se adauga in obiectul data proprietatea users: null 
+se executa o cerere get cu axios
+
+loadUsers(){
+   axios.get('api/user').then(response => this.users = response.data.data)
+},
+
+Lectia 16 Vuejs Filters and Momentjs 
+
+npm install moment --save
+
+se adauga in componentul Users; se defineste customDate filter
+
+<td>{{user.created_at | customDate}}</td>
+
+import moment from 'moment'
+
+filters: {
+   capitalize: function (value) { 
+      customDate: function(value){
+        if (!value) return ''
+        return moment(value).format('MMMM Do YYYY');
+        }
+     },
+
+Lectia 17 ProgressBar with Vuejs and Laravel When Create new Record with Ajax
+
+npm install vue-progressbar
+
+se adauga codul din documentatia vue-progressbar in app.js; de asemenea se incapsuleaza cererea axios.get din loadUsers()
+this.$Progress.start();
+axios.get('api/user').then(response => this.users = response.data.data)
+this.$Progress.finish();
+
+Lectia 18 Sweet Alert in Laravel and Vue after Ajax Request
+
+se inregistreaza toast in window pentru a avea acces global la variabila toast
+
+window.toast = toast;
+
+se adauga codul din documentatie in app.js; apoi se adauga codul de mai jos in metoda createUser()
+
+toast.fire({
+     icon: 'success',
+     title: 'Signed in successfully'
+})
+
+Lectia 19 Send HTTP Request Every 3 Seconds to Update Data in Laravel and Vuejs
+
+se adauga la created
+
+setInterval(()=>this.loadUsers(), 3000);  
+
+JavaScript Arrow Function
+<script>
+var messagge;
+
+messagge = () => {
+  return "Hello World!";
+}
+
+document.getElementById("demo").innerHTML = messagge();
+</script>
+
+
+Lectia 20 Use Custom Event to Send HTTP Request After You Create the User in Laravel and Vuejs
+
+se inregistreaza un custom event in createUser()
+
+vueEvent.$emit('RefreshData');
+
+apoi se face handle in created()
+
+vueEvent.$on('RefreshData', ()=> {
+  this.loadUsers();
+});
+
+Lectia 21 Detect Successfull HTTP Request in Laravel and Vue
+
+this.form.post('api/user').then(function(){     
+se executa codul daca cererea este realizata
+}).catch(function (error) {
+     console.log(error);
+});;
+
+Lectia 22 Delete User with Ajax Request and SweetAlert Modal in Laravel and Vuejs
+
+se adauga in componentul User codul
+
+<a href="#" @click="deleteUser(user.id)"><i class="fa fa-trash text-red"></i></a>
+
+apoi se defineste metoda deleteUser(id) si se adauga codul de la SweetAlert, iar la then()
+se va face o cerere AJAX de stergere a userului.
+se scrie codul de stergere a userului in metoda destroy() din UserController
+
+se adauga vueEvent.$emit('RefreshData') la then()
+
+Lectia 23 Using One Modal Window for Creating and Updating Data in Laravel and Vuejs
+
+se adauga metoda editModal(user) si se parseaza obiectul user
+
+<a href="#" data-toggle="modal" data-target="#modal-add-new" @click="editModal(user)"><i class="fa fa-edit"></i></a>
+
+se adauga
+
+editModal(user) {
+this.form.reset();
+// Use Vform fill method
+this.form.fill(user);
+}
+
+Lectia 24 Conditionally Switch Between Edit Mode and Create Mode of Modal Window
+
+se adauga 
+
+<form @submit.prevent="editMode ? updateUser() : createUser()">
+
+se adauga editMode: false in obiectul data
+
+se modifica value pentru editMode in metodele newModal() si editModal()
+
+se adauga
+
+<button type="submit" class="btn btn-primary" v-show="editMode">Update</button>
+<button type="submit" class="btn btn-primary" v-show="!editMode">Create</button>
+
+Lectia 25 Correctly Update User Information with Unique Email in Database with Laravel and Vue
+
+se adauga proprietatea id in obiectul form
+
+se adauga in metoda updateUser() si se observa metoda put pentru update api     
+this.form.put('api/user/' +this.form.id)
+
+se verifica id-ul trimis prin ajax request
+se scrie codul pentru update user in metoda update(Request $request, $id) din UserController
+
+Lectia 26 Security Issues While Developing API in Laravel and Vuejs
+
+se face o cerere GET la url-ul http://127.0.0.1:8000/api/user cu Postman
+
+se observa ca Authorization/TYPE este No Auth
+
+Lectia 27 Installing Laravel Passport for API Auth in Laravel 5.7
+
+composer require laravel/passport
+
+se executa
+
+php artisan migrate 
+
+pentru a se crea tabelele referitoare la token authentication
+
+se executa
+
+php artisan passport:install care va genera niste keys
+
+Client ID: 1
+Client secret: 7wIsORxkympbHR2Bsu77XaFT8F3IRWl7gb6bL04D
+Password grant client created successfully.
+Client ID: 2
+Client secret: UFfzd4DrfLmL8BlpbtZe7Nu3n5iUNI1wUOQOCaUA
+
+se adauga in modelul User
+
+use HasApiTokens
+
+se adauga in app/Providers/AuthServiceProvider in partea de sus
+
+use Laravel\Passport\Passport;
+
+apoi se adauga in metoda boot()
+
+Passport::routes();
+
+se adauga in config/auth.php
+
+passport la ['guards']['api']['driver']
+
+se creaza componentele pentru passport
+
+php artisan vendor:publish --tag=passport-components
+
+se adauga aceste componente in app.js
+
+Lectia 28 All we need is JWT for Laravel API Authentication
+
+se adauga in app/Http/Kernel.php la web
+
+\Laravel\Passport\Http\Middleware\CreateFreshApiToken::class
+
+se adauga in UserController
+
+public function __construct()
+   {
+      $this->middleware('auth:api');
+   }
+
+la testare a functionat doar dupa ce s-a executat comanda
+
+php artisan config:cache
+
+Managing Personal Access Tokens
+
+se creaza LoginController.php cu metoda login(), pentru a genera un token conform documentatiei
+
+se defineste o ruta cu prefix, user/login in routes/api.php si se executa o cerere post cu Postman la url
+
+http://127.0.0.1:8000/api/user/login
+
+la Body/form-data se trec email si password pentru un user
+
+se executa o cerere GET la 
+
+http://127.0.0.1:8000/api/user/
+
+la Headers/Authorization se scrie Bearer plus token-ul de la cererea precedenta
+
+
+Pentru a se face create cu Postman se executa o cerere POST la http://127.0.0.1:8000/api/user
+
+se alege Body/x-www-form-urlencoded
+
+sau Body/row, iar la Headers se adauga Content-Type application/json
+
+
+Pentru a se face update cu Postman se executa o cerere PUT la http://127.0.0.1:8000/api/user/{user_id}
+
+se alege Body/x-www-form-urlencoded
+
+sau Body/row, iar la Headers se adauga Content-Type application/json
+
+
+Pentru a se face delete cu Postman se executa o cerere DELETE la http://127.0.0.1:8000/api/user/{user_id}
+
+
+Lectia 29 Let's Make User Profile Component for User In Laravel and Vuejs
+
+style="background-image:url('./img/user_cover.png')"
+
+calea de la background-image incepe cu ./, ceea ce inseamna directorul public al laravel
+
+Lectia 30 Populate Login User Information in User Profile with Laravel and Vuejs
+
+Atunci cand se returneaza un obiect data se scrie ca mai jos, pentru ca altfel in consola va afisa undefinted Form
+data () {
+    return {
+    form: new Form({
+         id: '',
+         name: '',
+         email: ''
+        })
+     }
+}
+
+Lectia 31 What is Base64 ? How to Prepare file Upload with Base64 in Javascript Using Laravel and Vuejs
+
+Base64 este un string encoded pentru image
+
+se creaza metoda updatePhoto in componetul Profile si se verifica daca stringul photo ajunge in obiectul form la onchange
+
+Lectia 32 Submit Base64 String to Server for Uploading in Laravel and Vuejs
+
+se creaza metoda updateInfo() in componentul Profile si se executa o cerere put
+this.form.put('api/profile')
+
+se adauga o ruta put pentru profile in routes/api.php
+se creaza metoda updateProfile in UserController
+
+Lectia 33 Upload and Convert Base64 String to Image In PHP and Laravel
+
+se instaleaza libraria Intervention Image
+
+composer require intervention/image
+
+Publish configuration in Laravel
+  
+$ php artisan vendor:publish --provider="Intervention\Image\ImageServiceProviderLaravelRecent"
+
+se adauga codul pentru salvarea unei imagini
+se cereaza directorul profile in public/img
+
+Lectia 34 Checking File Size While Uploading Limit to less than 2MB in Laravel and Vue
+
+var file = $('#photo').prop('files')[0];
+console.log(file);
+if(file['size'] < 2111775) {}
+
+se verifica daca file size este mai mare de 2MB
+
+Lectia 35 Save New Profile Information with Validation in Database Laravel and Vue
+
+se va face update de new photo doar daca photo name este diferit de cel din baza de date
+se adauga noul name pentru photo in $request array
+
+$request->merge(['photo' => $name]);
+
+Lectia 36 Proper Error Handling in Profile Page Laravel 5 7 and Vuejs
+
+se adauga codul de error handling in formul din componentul Profile
+
+Lectia 37 How to Delete Old Photo From Server if User Change Profile Photo in Laravel 5.7 an Vue
+
+se adauga codul de stergere a unei imagini in metoda updateProfile() din UserController.php
+
+Lectia 38 How to Display Profile Picture in Vuejs file and Laravel 5.7
+
+se adauga in componentul Profile
+
+:src="getProfilePhoto()" 
+
+Lectia 39 Different Ways to Apply Access Conltrol List for Users in Laravel
+
+se adauga diferite gates in AuthServiceProvider conform documentatiei si se observa modul in care se face return
+
+Gate::define('isAdmin', function ($user) {
+    return $user->type === "admin";
+});
+
+Lectia 40 How to Upgrade Our Laravel 
+
+se citeste documentatia
+
+Lectia 41 Update Profile Picture Instantly After Uploading in Laravel and Vuejs
+
+se modifica metoda getProfilePhoto() pentru ca la onchange photo sa apara doar imaginea in base64 nu si calea unde se afla imaginile pe server,
+deoarece ea nu este inca salvata pe server
+
+Lectia 42 Easily Add ACL to Laravel Without Extra Tables in Database
+
+se adauga in master blade 
+
+@can('isAdmin') pentru link-ul developer
+
+Lectia 43 Limited Access to Controllers Using ACL in Laravel
+
+se adauga in metoda destroy() din UserController
+
+$this->authorize('isAdmin'), pentru toate operatiile se poate adauga aceasta linie de cod in constructor
+
+Lectia 44 Laravel 5.7 ACL in Front-end Using Vue js
+
+se adauga in master blade 
+
+@can('isAdmin') pentru link-ul management
+
+se adauga in metoda index() din UserController
+
+$this->authorize('isAdmin')
+
+si se observa in consola eroarea 403 Forbidden
+
+se creaza clasa Gate.js cu anumite metode in resources/js
+se importa clasa Gate.js in app.js
+
+se adauga o noua proprietate pentru instanta Vue
+
+Vue.prototype.$gate = new Gate(window.user);
+
+variabila globala window.user se seteaza la logare in master.blade
+
+@auth
+    <script>
+      window.user = @json(auth()->user());
+    </script>
+@endauth
+se verifica in componetul Users v-if="$gate.isAdmin()"
+se verifica in metoda loadUsers() daca if(this.$gate.isAdmin())
+
+Lectia 45 Design 404 Page for Front-End If User Doesn't Have Access
+
+se inregistreaza global componentul NotFound si se defineste tag-ul <not-found>
+
+Vue.component(
+  'not-found',
+  require('./components/NotFound.vue').default
+);
+
+apoi se acceseaza componetul NotFound in componentul Users 
+
+<div class="col-xs-12" v-else>
+  <not-found></not-found>
+</div>
+
+Lectia 46 How User and Author Can Have The Same Access Level in Laravel 5.7 Front-end and Back-end
+
+se adauga permisiunile in metoda index() din UserController
+if (\Gate::allows('isAdmin') || \Gate::allows('isAuthor')) {
+   return User::latest()->paginate(50);
+}
+
+se creaza metoda isAdminOrAuthor() in Gate.js si se adauga la $gate in Users component $gate.isAdminOrAuthor()
+
+Lectia 47 Laravel and Vuejs Pagination Best Packages
+
+laravel enso tables
+
+Lectia 48 Laravel 5.7 and Vuejs Ajax Pagination
+
+se executa comanda
+
+npm install laravel-vue-pagination
+
+se adauga in app.js 
+
+Vue.component('pagination', require('laravel-vue-pagination'));
+
+se adauga in componentul Users 
+
+<pagination :data="users" @pagination-change-page="getResults"></pagination>
+
+getResults(page = 1) {
+   axios.get('api/user?page=' + page)
+    .then(response => {
+     this.users = response.data;
+     });
+}
+
+apar niste erori; in metoda loadUsers() se modifica remove la response.data.data cu response.data, pentru ca datele sa fie stocate intr-un obiect
+
+se adauga data pentru users in v-for
+<tr v-for="user in users.data" :key="user.id" :item="user">
+
+Lectia 49 Review - What Else We Need to Add for Our Laravel + Vue App ?
+
+filtrare date
+
+Lectia 50 Vue Router 404 Page with Laravel 5.7
+
+Lectia 51 Re-Usable Search Functionality in Laravel 5.7 and Vuejs ( Ajax, Axios )
+
+se adauga in obiectul Vue din app.js
+
+data: {
+  search: ''
+}
+
+
+
+
+
+
+

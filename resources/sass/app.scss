@@ -1,0 +1,20 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+
+.router-link-exact-active {
+    color: #fff;
+    background: #1e282c;
+    color:#fff !important;
+ 
+}
+.remove-padding-left {
+    padding-left: 0px;
+}
+.add-padding-left {
+    padding-left: 5px;
+}
